@@ -85,7 +85,7 @@ while running:
             l = -1
             for vertex in vertices:
                 l+=1
-                if math.sqrt((vertex[0] - x)**2 + (vertex[1] - y)**2) < 50:
+                if math.sqrt((vertex[0] - x) **2 + (vertex[1] - y) **2) < 50:
                     x, y = vertex
                     spis.append(ch[(x,y)])
                     all_vertices.append((x, y))
@@ -119,13 +119,14 @@ while running:
         screen.blit(img, vertex)
     for line in lines:
         pygame.draw.line(screen, BLACK, line[0], line[1], 5)
+
         if line[0] in directions:
-                    if directions[line[0]] == "right":
-                        angle = get_angle(line[0], line[1])
-                        draw_arrow(line[1][0], line[1][1], angle, RED)
-                    elif directions[line[0]] == "left":
-                        angle = get_angle(line[1], line[0])
-                        draw_arrow(line[0][0], line[0][1], angle, BLUE)
+            if directions[line[0]] == "right":
+                angle = get_angle(line[0], line[1])
+                draw_arrow(line[1][0], line[1][1], angle, RED)
+            elif directions[line[0]] == "left":
+                angle = get_angle(line[1], line[0])
+                draw_arrow(line[0][0], line[0][1], angle, BLUE)
 
     for vertex in range(1, len(all_vertices)):
         draw_text(screen, str(chisla[vertex - 1]), 30, ((all_vertices[vertex - 1][0] + all_vertices[vertex][0]) // 2),
@@ -136,6 +137,26 @@ while running:
 
 
 
+# Создание матрицы смежности
+INF = float('inf')
+graph = [[float('inf')for _ in range(len(vertices))] for _ in range(len(vertices))]
+
+
+els1 = (list(directions.values()))
+
+
+for i in range(1, len(spis)):
+    if spis[i] == spis[i-1]:
+        graph[spis[i]-1][spis[i-1]-1] = chisla[i-1]
+    if els1[i-1] == 'right':
+        graph[spis[i-1]-1][spis[i]-1] = chisla[i-1]
+    elif els1[i-1] == 'left':
+        graph[spis[i]-1][spis[i-1]-1] = chisla[i-1]
+    elif els1[i-1] == 0:
+        graph[spis[i-1]-1][spis[i]-1] = chisla[i-1]
+        graph[spis[i]-1][spis[i-1]-1] = chisla[i-1]
+for i in graph:
+    print(*i)
 
 
 
