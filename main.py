@@ -182,52 +182,112 @@ def check(i, j):
 def floyd_warshall(graph):
     V = len(graph)
     dist = [[0 if i == j else graph[i][j] if graph[i][j] != 0 else INF for j in range(V)] for i in range(V)]
-    global f
+
     for k in range(V):
 
         for i in range(V):
             screen.blit(img1, (vertices[i][0], vertices[i][1]+2))
-
+            draw_text(screen, str(spis[i]), 25, all_vertices[i][0] + 18,
+                      all_vertices[i][1] + 6, BLACK)
             pygame.display.flip()
             pygame.time.wait(f)
             for j in range(V):
                 if i!=j and i == k or i!=j and j==k:
                     screen.blit(img1, (vertices[j][0], vertices[j][1]+2))
-
+                    draw_text(screen, str(spis[j]), 25, all_vertices[j][0] + 18,
+                              all_vertices[j][1] + 6, BLACK)
                     pygame.display.flip()
                     pygame.time.wait(f)
+                    if (
+                    (vertices[i][0] + 15, vertices[i][1] + 15), (vertices[j][0] + 15, vertices[j][1] + 15)) in lines or  ((vertices[j][0] + 15, vertices[j][1] + 15), (vertices[i][0] + 15, vertices[i][1] + 15)) in lines:
 
 
+
+                        pygame.draw.line(screen, RED, (vertices[i][0] + 15, vertices[i][1]+15 ), (vertices[j][0] + 15, vertices[j][1]+15), 5)
+
+                        pygame.display.flip()
+                        pygame.time.wait(f)
                 if i!=j and i!=k and j!=k:
 
                     screen.blit(img2, vertices[k])
                     screen.blit(img1, (vertices[j][0], vertices[j][1]+2))
-
-
+                    draw_text(screen, str(spis[k]), 25, all_vertices[k][0] + 18,
+                              all_vertices[k][1] + 6, BLACK)
+                    draw_text(screen, str(spis[j]), 25, all_vertices[j][0] + 18,
+                              all_vertices[j][1] + 6, BLACK)
                     pygame.display.flip()
-
                     pygame.time.wait(f)
+
+                    if (
+                    (vertices[i][0] + 15, vertices[i][1] + 15), (vertices[k][0] + 15, vertices[k][1] + 15)) in lines and ((vertices[k][0]+15, vertices[k][1]+15), (vertices[j][0]+15, vertices[j][1]+15)) in lines or (
+                    (vertices[k][0] + 15, vertices[k][1] + 15), (vertices[i][0] + 15, vertices[i][1] + 15)) in lines and ((vertices[j][0] + 15, vertices[j][1] + 15),(vertices[k][0] + 15, vertices[k][1] + 15)) in lines or (
+                    (vertices[i][0] + 15, vertices[i][1] + 15), (vertices[k][0] + 15, vertices[k][1] + 15)) in lines and ((vertices[j][0]+15, vertices[j][1]+15), (vertices[k][0]+15, vertices[k][1]+15)) in lines or (
+                    (vertices[k][0] + 15, vertices[k][1] + 15), (vertices[i][0] + 15, vertices[i][1] + 15)) in lines and ((vertices[k][0]+15, vertices[k][1]+15), (vertices[j][0]+15, vertices[j][1]+15)) in lines:
+
+
+
+
+                        pygame.draw.line(screen, RED, (vertices[i][0] + 15, vertices[i][1]+15 ), (vertices[k][0] + 15, vertices[k][1]+15), 5)
+                        pygame.draw.line(screen, RED, (vertices[k][0] + 15, vertices[k][1]+15 ), (vertices[j][0] + 15, vertices[j][1]+15), 5)
+
+
+                        pygame.display.flip()
+
+                        pygame.time.wait(f)
                 dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j])
                 print(
                     f"Шаг {k + 1}: Расстояние от вершины {i+1} до вершины {j+1} через вершину {k+1} равно {dist[i][j]}")
                 if i != j and i != k and j != k:
                     screen.blit(img, vertices[k])
-
+                    draw_text(screen, str(spis[k]), 25, all_vertices[k][0] + 18,
+                              all_vertices[k][1] + 6, BLACK)
                     pygame.display.flip()
-                    pygame.time.wait(f)
+
+                    if (
+                            (vertices[i][0] + 15, vertices[i][1] + 15),
+                            (vertices[k][0] + 15, vertices[k][1] + 15)) in lines and (
+                    (vertices[k][0] + 15, vertices[k][1] + 15),
+                    (vertices[j][0] + 15, vertices[j][1] + 15)) in lines or (
+                            (vertices[k][0] + 15, vertices[k][1] + 15),
+                            (vertices[i][0] + 15, vertices[i][1] + 15)) in lines and (
+                    (vertices[j][0] + 15, vertices[j][1] + 15),
+                    (vertices[k][0] + 15, vertices[k][1] + 15)) in lines or (
+                            (vertices[i][0] + 15, vertices[i][1] + 15),
+                            (vertices[k][0] + 15, vertices[k][1] + 15)) in lines and (
+                    (vertices[j][0] + 15, vertices[j][1] + 15),
+                    (vertices[k][0] + 15, vertices[k][1] + 15)) in lines or (
+                            (vertices[k][0] + 15, vertices[k][1] + 15),
+                            (vertices[i][0] + 15, vertices[i][1] + 15)) in lines and (
+                    (vertices[k][0] + 15, vertices[k][1] + 15), (vertices[j][0] + 15, vertices[j][1] + 15)) in lines:
+                        pygame.draw.line(screen, BLACK, (vertices[i][0] + 15, vertices[i][1]+15 ), (vertices[k][0] + 15, vertices[k][1]+15), 5)
+                        pygame.draw.line(screen, BLACK, (vertices[k][0] + 15, vertices[k][1]+15 ), (vertices[j][0] + 15, vertices[j][1]+15), 5)
+
+
+                        pygame.display.flip()
+                        pygame.time.wait(f)
                 if i!=j:
                     screen.blit(img, vertices[j])
+                    draw_text(screen, str(spis[j]), 25, all_vertices[j][0] + 18,
+                              all_vertices[j][1] + 6, BLACK)
+                    pygame.display.flip()
+                    if (
+                    (vertices[i][0] + 15, vertices[i][1] + 15), (vertices[j][0] + 15, vertices[j][1] + 15)) in lines or           ((vertices[j][0] + 15, vertices[j][1] + 15), (vertices[i][0] + 15, vertices[i][1] + 15)) in lines:
 
+                        pygame.draw.line(screen, BLACK, (vertices[i][0] + 15, vertices[i][1]+15 ), (vertices[j][0] + 15, vertices[j][1]+15), 5)
 
-
-                    pygame.time.wait(f)
+                        pygame.display.flip()
+                        pygame.time.wait(f)
 
             screen.blit(img, vertices[i])
-
+            draw_text(screen, str(spis[i]), 25, all_vertices[i][0] + 18,
+                      all_vertices[i][1] + 6, BLACK)
             pygame.display.flip()
             pygame.time.wait(f)
 
     return dist
+
+
+# Пример графа в виде матрицы смежност
 
 result = floyd_warshall(graph)
 print(lines, vertices)
@@ -239,16 +299,6 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-
-
-
-
-
-
-
-
-
-
 
 pygame.quit()
 sys.exit()
