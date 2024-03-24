@@ -85,7 +85,7 @@ while running:
             l = -1
             for vertex in vertices:
                 l+=1
-                if math.sqrt((vertex[0] - x) **2 + (vertex[1] - y) **2) < 50:
+                if math.sqrt((vertex[0] - x)**2 + (vertex[1] - y)**2) < 50:
                     x, y = vertex
                     spis.append(ch[(x,y)])
                     all_vertices.append((x, y))
@@ -155,9 +155,31 @@ for i in range(1, len(spis)):
     elif els1[i-1] == 0:
         graph[spis[i-1]-1][spis[i]-1] = chisla[i-1]
         graph[spis[i]-1][spis[i-1]-1] = chisla[i-1]
-for i in graph:
-    print(*i)
 
+
+INF = float('inf')
+
+def floyd_warshall(graph):
+    n = len(graph)
+    dist = graph
+
+    for k in range(n):
+        print(f"Iteration {k+1}:")
+        for i in range(n):
+            for j in range(n):
+                dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j])
+                print(
+                    f"Шаг {k + 1}: Расстояние от вершины {i+1} до вершины {j+1} через вершину {k+1} равно {dist[i][j]}")
+
+    return dist
+
+# Пример графа в виде матрицы смежност
+
+result = floyd_warshall(graph)
+
+print("\nFinal result:")
+for row in result:
+    print(row)
 
 
 
