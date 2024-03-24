@@ -26,6 +26,12 @@ pygame.display.set_caption("Генерация графа с помощью Pyga
 imge = pygame.image.load('vertex.png')
 imge.set_colorkey((255, 255, 255))
 img = pygame.transform.scale(imge, (40, 40))
+imge1 = pygame.image.load('vertex2.png')
+imge1.set_colorkey((255, 255, 255))
+img1 = pygame.transform.scale(imge1, (38, 38))
+imge2 = pygame.image.load('vertex3.png')
+imge2.set_colorkey((255, 255, 255))
+img2 = pygame.transform.scale(imge2, (37, 37))
 
 all_vertices = []
 vertices = []  # Список вершин
@@ -49,10 +55,11 @@ def draw_text(surf, text, size, x, y, COLOR):
     text_rect.midtop = (x, y)
     surf.blit(text_surface, text_rect)
 
-def draw_arrow(x, y, angle, color):
+def draw_arrow(a, b, angle, color):
     arrow_length = 15
     base_width = 7.5
-
+    x  = a
+    y  = b
     arrow_points = [
         (x + arrow_length * math.cos(angle), y + arrow_length * math.sin(angle)),
         (x + arrow_length * math.cos(angle + 2.5), y + arrow_length * math.sin(angle + 2.5)),
@@ -68,6 +75,8 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+            pygame.quit()
+            sys.exit()
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 directions[start_pos] = "left"
@@ -85,7 +94,7 @@ while running:
             l = -1
             for vertex in vertices:
                 l+=1
-                if math.sqrt((vertex[0] - x)**2 + (vertex[1] - y)**2) < 50:
+                if math.sqrt((vertex[0] - x) **2 + (vertex[1] - y) **2) < 50:
                     x, y = vertex
                     spis.append(ch[(x,y)])
                     all_vertices.append((x, y))
@@ -156,30 +165,81 @@ for i in range(1, len(spis)):
         graph[spis[i-1]-1][spis[i]-1] = chisla[i-1]
         graph[spis[i]-1][spis[i-1]-1] = chisla[i-1]
 
+INF = 99999
+h = True
+f = 600
+def check(i, j):
+    global vertices
+    global els1
+    if els1[i] == 'right':
+        angle = get_angle(vertices[i], vertices[j])
+        draw_arrow(vertices[j][0], vertices[j][1], angle, RED)
 
-INF = float('inf')
+    elif els1[i] == 'left':
+        angle = get_angle(vertices[j], vertices[i])
+        draw_arrow(vertices[i][0], vertices[i][1], angle, BLUE)
 
 def floyd_warshall(graph):
-    n = len(graph)
-    dist = graph
+    V = len(graph)
+    dist = [[0 if i == j else graph[i][j] if graph[i][j] != 0 else INF for j in range(V)] for i in range(V)]
+    global f
+    for k in range(V):
 
-    for k in range(n):
-        print(f"Iteration {k+1}:")
-        for i in range(n):
-            for j in range(n):
+        for i in range(V):
+            screen.blit(img1, (vertices[i][0], vertices[i][1]+2))
+
+            pygame.display.flip()
+            pygame.time.wait(f)
+            for j in range(V):
+                if i!=j and i == k or i!=j and j==k:
+                    screen.blit(img1, (vertices[j][0], vertices[j][1]+2))
+
+                    pygame.display.flip()
+                    pygame.time.wait(f)
+
+
+                if i!=j and i!=k and j!=k:
+
+                    screen.blit(img2, vertices[k])
+                    screen.blit(img1, (vertices[j][0], vertices[j][1]+2))
+
+
+                    pygame.display.flip()
+
+                    pygame.time.wait(f)
                 dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j])
                 print(
                     f"Шаг {k + 1}: Расстояние от вершины {i+1} до вершины {j+1} через вершину {k+1} равно {dist[i][j]}")
+                if i != j and i != k and j != k:
+                    screen.blit(img, vertices[k])
+
+                    pygame.display.flip()
+                    pygame.time.wait(f)
+                if i!=j:
+                    screen.blit(img, vertices[j])
+
+
+
+                    pygame.time.wait(f)
+
+            screen.blit(img, vertices[i])
+
+            pygame.display.flip()
+            pygame.time.wait(f)
 
     return dist
 
-# Пример графа в виде матрицы смежност
-
 result = floyd_warshall(graph)
-
+print(lines, vertices)
 print("\nFinal result:")
 for row in result:
     print(row)
+run = True
+while run:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+
 
 
 
